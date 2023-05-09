@@ -1,0 +1,5 @@
+input.no-border {
+  border: none;
+  background-color: transparent;
+  outline: none;
+}

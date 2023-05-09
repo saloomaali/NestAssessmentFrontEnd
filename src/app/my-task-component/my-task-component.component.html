@@ -1,0 +1,36 @@
+<div class="container col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <h2>My Tasks</h2>
+    <hr>
+    <div class="row">
+        <div>
+            <table class="table table-striped vie">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Patient Details</th>
+                        <th>Location:facility-unit-room-bed</th>
+                        <th>Task description</th>
+                        <th>Due today <i class="bi bi-arrow-up"></i></th>
+                        <th>Status</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of tasks | paginate: { itemsPerPage: 2, currentPage: p, totalItems: total }">
+                        <td scope="col"><input type="checkbox" name="" id=""></td>
+                        <td>{{task.name}} | {{task.patientId}}</td>
+                        <td>{{task.location}}-{{task.facility}}-{{task.unitName}}-{{task.room}}-{{task.bed}}</td>
+                        <td>{{task.description}}</td>
+                        <td>{{task.dueDate | date : 'd MMM y hh:mm'}}</td>
+                        <td>{{task.status}}</td>
+                        <td (click)="getId(task.id)"><input type="text" value="{{task.comment}}" class="no-border"
+                                (keydown.enter)="onEnter($event)"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="float-end">
+                <pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
