@@ -1,22 +1,24 @@
-  <div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto px-0">
-            <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                <div id="sidebar-nav" class="list-group border-0 rounded-0 text-sm-start min-vh-100">
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-person-lines-fill"></i><span>My Tasks</span> </a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-clipboard2-pulse"></i><span>Patient Tasks</span></a>
-                    
-                </div>
-            </div>
+<app-navbar></app-navbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav opened="true" mode="side" class="col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
+        <mat-nav-list>
+            <a mat-list-item routerLink="/mytasks" class="list-group-item border-end-0 d-inline-block text-truncate"
+                data-bs-parent="#sidebar"><i class="bi bi-person-lines-fill"></i> <span> My Tasks</span> </a>
+            <a mat-list-item routerLink="/patienttasks"
+                class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i
+                    class="bi bi-clipboard2-pulse"></i> <span> Patient Tasks</span></a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="col col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
+        <mat-toolbar>
+            <button mat-icon-button (click)="sidenav.toggle();">
+                <mat-icon>
+                    <FONT COLOR="#0000">menu </FONT>
+                </mat-icon>
+            </button>
+        </mat-toolbar>
+        <div style="height: 88vh;">
+            <router-outlet> </router-outlet>
         </div>
-        <main class="col ps-md-2 pt-2">
-            <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a>
-            <div class="page-header pt-3">
-                <h4>My Tasks</h4>
-                <hr>
-            </div>
-        </main>
-    </div>
-</div>
-
-  
+    </mat-sidenav-content>
+</mat-sidenav-container>

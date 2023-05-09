@@ -1,0 +1,29 @@
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #0b0b0b;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+.button:hover {
+    background-color: #0069d9;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 500px;
+
+}
+.table{
+    text-align: center;
+}
