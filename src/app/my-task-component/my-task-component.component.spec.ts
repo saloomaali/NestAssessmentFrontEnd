@@ -4,26 +4,42 @@ import { MyTaskComponentComponent } from './my-task-component.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TaskServiceService } from '../task-service.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import { TASKS } from '../mock-data/task';
 
 describe('MyTaskComponentComponent', () => {
   let component: MyTaskComponentComponent;
   let fixture: ComponentFixture<MyTaskComponentComponent>;
-  let httpMock: HttpTestingController;
-  let service: TaskServiceService;
+  // let httpMock: HttpTestingController;
+  let taskService: TaskServiceService;
+  let router: Router;
+
+
 
   beforeEach(async () => {
+ 
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NgxPaginationModule, RouterTestingModule],
       declarations: [MyTaskComponentComponent],
-      providers: [TaskServiceService]
+      providers: [TaskServiceService, Router]
     })
       .compileComponents();
+    // fixture = TestBed.createComponent(MyTaskComponentComponent);
+    // component = fixture.componentInstance;
+    // fixture.detectChanges();
+    // httpMock = TestBed.inject(HttpTestingController);
+
+
+  });
+  beforeEach(() => {
     fixture = TestBed.createComponent(MyTaskComponentComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    taskService = TestBed.inject(TaskServiceService);
+    // spyOn(taskService, 'viewTasks').and.returnValue(of([{ id: 1, title: 'Task 1' }, { id: 2, title: 'Task 2' }])); // spy on the viewTasks method and return a mock observable
     fixture.detectChanges();
-    httpMock = TestBed.inject(HttpTestingController);
-    service = TestBed.inject(TaskServiceService);
-
+   
   });
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -36,31 +52,44 @@ describe('MyTaskComponentComponent', () => {
     component.pageChangeEvent(2);
     expect(component.p).toEqual(2);
   });
-  it('should set tasks property after a successful API call', () => {
-    const expectedTasks = [
-      { id: 1, name: 'Task 1' },
-      { id: 2, name: 'Task 2' },
-    ];
-    const url = 'http://localhost:8081/mytask/view';
-    service.viewTasks().subscribe((request) => {
-      expect(component.tasks).toEqual(expectedTasks);
-      httpMock.expectOne(url)
-      expect(request).toEqual('GET');
-    });
-  });
-  // it('should handle errors', () => {
-  //   const errorMsg = 'Error message';
-  //   const status = 500;
-
-  //   spyOn(localStorage, 'setItem');
-  //   spyOn(component.router, 'navigateByUrl');
-
-  //   component.handleError({
-  //     message: errorMsg,
-  //     status: status
-  //   });
-
-  //   expect(localStorage.setItem).toHaveBeenCalledWith('errorMsg', `${errorMsg} with status code ${status}`);
-  //   expect(component.router.navigateByUrl).toHaveBeenCalledWith('/error');
+  // it('should load tasks on initialization', () => {
+  //   expect(component.tasks).toBeTruthy(); // verify that tasks are loaded on component initialization
   // });
+
+  it('should call handleError', () => {
+    spyOn(component, 'handleError');
+    const mockError = {message: 'HttpErrorResponse', status: "500"};
+    spyOn(taskService, 'viewTasks').and.returnValue(throwError(mockError));
+    component.viewMyTasks();
+    expect(taskService.viewTasks).toHaveBeenCalled();
+    expect(component.handleError).toHaveBeenCalledWith('HttpErrorResponsewith status code500');
+  });
+  it('should call handleError', () => {
+    spyOn(component, 'handleError');
+    const mockValue = event;
+    const mockError = {message: 'HttpErrorResponse', status: "500"};
+    spyOn(taskService, 'updateComment').and.returnValue(throwError(mockError));
+    component.onEnter(mockValue);
+    expect(taskService.updateComment).toHaveBeenCalled();
+    expect(component.handleError).toHaveBeenCalledWith('HttpErrorResponsewith status code500');
+  });
+  it('should store tasks in tasks on initialization',() =>{
+    spyOn(taskService, 'viewTasks').and.returnValue(of(TASKS));
+    component.viewMyTasks();
+    expect(component.tasks).toEqual(TASKS);
+  });
+  it('should call error page when an error occurs', () => {
+    const spy = spyOn(router, 'navigateByUrl');
+    component.handleError("HttpErrorResponsewith status code500");
+    expect(spy).toHaveBeenCalledWith('/error');
+  })
+  it('should call viewMyTasks() function after successful update', () => {
+    spyOn(window, 'alert');
+    const mockResponse = { msg: 'Comment updated successfully.' };
+    spyOn(taskService, 'updateComment').and.returnValue(of(mockResponse));
+    const viewMyTasksSpy = spyOn(component, 'viewMyTasks');
+    component.onEnter({ target: { value: 'New comment' } });
+    expect(window.alert).toHaveBeenCalledWith(mockResponse.msg);
+    expect(viewMyTasksSpy).toHaveBeenCalled();
+  }); 
 });

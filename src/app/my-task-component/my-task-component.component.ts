@@ -17,6 +17,10 @@ export class MyTaskComponentComponent {
     this.p = event;
   }
   constructor(private api: TaskServiceService, private router: Router) {
+   
+    this.viewMyTasks();
+  }
+  viewMyTasks(){
     this.api.viewTasks().subscribe(
       (response) => {
         this.tasks = response;
@@ -36,7 +40,7 @@ export class MyTaskComponentComponent {
     this.api.updateComment(this.id, data).subscribe(
       (response: any) => {
         alert(response.msg);
-        window.location.reload();
+        this.viewMyTasks();
       },
       error => {
         this.handleError(error.message + "with status code" + error.status);
